@@ -14,3 +14,31 @@ http://www.multigesture.net/articles/how-to-write-an-emulator-chip-8-interpreter
 
 * Wikipedia
 https://en.wikipedia.org/wiki/CHIP-8
+
+
+#### Random Notes:
+* to initialize variables in a case statement, must surround with {}
+* suggested keyboard layout:
+```
+Keypad                   Keyboard
++-+-+-+-+                +-+-+-+-+
+|1|2|3|C|                |1|2|3|4|
++-+-+-+-+                +-+-+-+-+
+|4|5|6|D|                |Q|W|E|R|
++-+-+-+-+       =>       +-+-+-+-+
+|7|8|9|E|                |A|S|D|F|
++-+-+-+-+                +-+-+-+-+
+|A|0|B|F|                |Z|X|C|V|
++-+-+-+-+                +-+-+-+-+
+
+```
+
+* How bytes represent a sprite:
+
+```
+HEX    BIN        Sprite
+0x3C   00111100     ****
+0xC3   11000011   **    **
+0xFF   11111111   ********
+
+```
