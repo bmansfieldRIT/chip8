@@ -138,6 +138,11 @@ void drawGraphics(){
     // use GLUT to draw pixel on the screen, etc.
 }
 
+// given opcode 0xXNNN, sets the program counter to address NNN
+void setPCToAddr(unsigned short opcode){
+    pc = opcode & 0x0FFF;
+}
+
 void Chip8::emulateCycle(){
     // fetch opcode
     auto opcode = memory[pc] << 8 | memory[pc + 1];
@@ -149,22 +154,75 @@ void Chip8::emulateCycle(){
             switch(opcode & 0x000F){
                 // 0x00E0: clear screen
                 case 0x0000:
+                    clearDisplay();
                     break;
                 // 0x00EE: return from subroutine
                 case 0x000E:
+                    --sp;
+                    pc = stack[pc];
                     break;
                 default:
                     printf("Unknown opcode [0x0000]: 0x%X\n", opcode);
             }
             break;
         }
+        // 1NNN: Jump to address NNN
+        case 0x1000:{
+            setPCtoAddr(opcode);
+        }
         // 2NNN: call the subroutine at address NNN
         case 0x2000:{
             // place the program counter on the stack
             stack[sp] = pc;
             ++sp;
-            // set program counter to the new address
-            pc = opcode & 0x0FFF;
+            setPCtoAddr(opcode);
+        }
+        // 3XNN: skip next instruction if VX == NN
+        // usually next instr is jump to skip a code block
+        case 0x3000:{
+            if (V[opcode & 0x0F00] == (opcode & 0x00FF))
+                pc += 4;
+                break;
+            pc += 2;
+            break;
+        }
+        // 4XNN: skip next instruction if VX != NN
+        // usually next instr is jump to skip a code block
+        case 0x4000:{
+            if (V[opcode & 0x0F00] != (opcode & 0x00FF))
+                pc += 4;
+                break;
+            pc += 2;
+            break;
+        }
+        // 5XY0: skips next instruction if VX == VY
+        case 0x5000:{
+            if (V[opcode & 0x0F00] != V[opcode & 0x00F0])
+                pc += 4;
+                break;
+            pc += 2;
+            break;
+        }
+        // 6XNN: set VX to NN
+        case 0x6000:{
+            V[(opcode & 0x0F00)] = (opcode & 0x00FF);
+            break;
+        }
+        // 7XNN: Add NN to VX (Carry flag not changed)
+        case 0x7000:{
+            V[(opcode & 0x0F00)] += (opcode & 0x00FF);
+            break;
+        }
+        // 8XY0: Set VX to value of VY
+        case 0x8000:{
+            switch (opcode & 0x000F){
+                // 8XY0: Set VX to value of VY
+                case 0x0000:{
+                    V[(opcode & 0x0F00)] = V[(opcode & 0x00F0)];
+                    break;
+                }
+                case 0x0001
+            }
         }
         // ANNN: sets I to address NNN
         case 0xA000:{
