@@ -12,7 +12,7 @@ const int SCREEN_WIDTH  = 64;
 const int SCREEN_HEIGHT = 32;
 
 // stores the current opcode
-// opcodes are two bytes, so we use a short
+// opcodes are two bytes (16 bits), so we use a short
 unsigned short opcode;
 
 // 4k memory
@@ -206,11 +206,13 @@ void Chip8::emulateCycle(){
         // 6XNN: set VX to NN
         case 0x6000:{
             V[(opcode & 0x0F00)] = (opcode & 0x00FF);
+            pc += 2;
             break;
         }
         // 7XNN: Add NN to VX (Carry flag not changed)
         case 0x7000:{
             V[(opcode & 0x0F00)] += (opcode & 0x00FF);
+            pc += 2;
             break;
         }
         // 8XY0: Set VX to value of VY
@@ -219,9 +221,55 @@ void Chip8::emulateCycle(){
                 // 8XY0: Set VX to value of VY
                 case 0x0000:{
                     V[(opcode & 0x0F00)] = V[(opcode & 0x00F0)];
+                    pc += 2;
                     break;
                 }
-                case 0x0001
+                // 8XY1: Set VX to VX | VY
+                case 0x0001:{
+                    V[(opcode & 0x0F00)] |= V[(opcode & 0x00F0)];
+                    pc += 2;
+                    break;
+                }
+                // 8XY2: Set VX to VX & VY
+                case 0x0002:{
+                    V[(opcode & 0x0F00)] &= V[(opcode & 0x00F0)];
+                    pc += 2;
+                    break;
+                }
+                // 8XY3: Set VX to VX ^ VY
+                case 0x0003:{
+                    V[(opcode & 0x0F00)] ^= V[(opcode & 0x00F0)];
+                    pc += 2;
+                    break;
+                }
+                // 8XY4: Set VX to VX + VY
+                case 0x0004:{
+
+                    auto x = V[(opcode & 0x0F00)];
+                    auto y = V[(opcode & 0x00F0)];
+                    while (y != 0){
+                        x = x ^ y;
+                        auto carry =  x & y;
+                        y = carry << 1;
+                    }
+                    V[(opcode & 0x0F00)] = x;
+                    pc += 2;
+                    break;
+                }
+                // 8XY5: Set VX to VX - VY
+                case 0x0004:{
+
+                    auto x = V[(opcode & 0x0F00)];
+                    auto y = V[(opcode & 0x00F0)];
+                    while (y != 0){
+                        x = x ^ y;
+                        auto borrow =  (~x) & y;
+                        y = borrow << 1;
+                    }
+                    V[(opcode & 0x0F00)] = x;
+                    pc += 2;
+                    break;
+                }
             }
         }
         // ANNN: sets I to address NNN
