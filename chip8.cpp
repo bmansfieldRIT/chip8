@@ -279,6 +279,12 @@ void Chip8::emulateCycle(){
                     pc += 2;
                     break;
                 }
+                // 8XYE: VX = Vy = VY << 1. VF set to leftmost bit of VY before shift.
+                case 0x000E:{
+                    V[0xFF] = V[(opcode & 0x00F0) >> 4] & 0x1000;
+                    V[(opcode & 0x00F0) >> 4] <<= 1;
+                    V[(opcode & 0x0F00) >> 8] = V[(opcode & 0x00F0) >> 4];
+                }
             }
         }
         // ANNN: sets I to address NNN
