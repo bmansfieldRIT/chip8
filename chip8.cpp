@@ -275,7 +275,7 @@ void Chip8::emulateCycle(){
                         V[0xF] = 0; // borrow
                     else
                         V[0xF] = 1;
-                    V[(opcode & 0x0F00) >> 8] = V[(opcode & 0x00F0) >> 4] - V[(opcode & 0x0F00) >> 4];
+                    V[(opcode & 0x0F00) >> 8] = V[(opcode & 0x00F0) >> 4] - V[(opcode & 0x0F00) >> 8];
                     pc += 2;
                     break;
                 }
