@@ -313,6 +313,15 @@ void Chip8::emulateCycle(){
             pc += 2;
             break;
         }
+        // CXNN: VX = rand(0, 255) & NN.
+        case 0xC000:{
+            std::random_device rd;
+            std::mt19937 mt(rd());
+            std::uniform_real_distibution<double> dist (0.0, 255.0)
+            V[(opcode 0x0F00) >> 8] = dist(mt) & V[(opcode & 0x00FF)];
+            pc += 2;
+            break;
+        }
         // DXYN: draw a pixel at coords VX, VY, that is N px high
         case 0xD000:{
             // get VX
