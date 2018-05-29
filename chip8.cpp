@@ -180,7 +180,7 @@ void Chip8::emulateCycle(){
         // 3XNN: skip next instruction if VX == NN
         // usually next instr is jump to skip a code block
         case 0x3000:{
-            if (V[opcode & 0x0F00] == (opcode & 0x00FF))
+            if (V[opcode & 0x0F00 >> 8] == (opcode & 0x00FF))
                 pc += 4;
                 break;
             pc += 2;
@@ -189,7 +189,7 @@ void Chip8::emulateCycle(){
         // 4XNN: skip next instruction if VX != NN
         // usually next instr is jump to skip a code block
         case 0x4000:{
-            if (V[opcode & 0x0F00] != (opcode & 0x00FF))
+            if (V[(opcode & 0x0F00) >> 8] != (opcode & 0x00FF))
                 pc += 4;
                 break;
             pc += 2;
@@ -197,7 +197,7 @@ void Chip8::emulateCycle(){
         }
         // 5XY0: skips next instruction if VX == VY
         case 0x5000:{
-            if (V[opcode & 0x0F00] != V[opcode & 0x00F0])
+            if (V[(opcode & 0x0F00) >> 8] != V[(opcode & 0x00F0) >> 4])
                 pc += 4;
                 break;
             pc += 2;
@@ -205,13 +205,13 @@ void Chip8::emulateCycle(){
         }
         // 6XNN: set VX to NN
         case 0x6000:{
-            V[(opcode & 0x0F00)] = (opcode & 0x00FF);
+            V[(opcode & 0x0F00) >> 8] = (opcode & 0x00FF);
             pc += 2;
             break;
         }
         // 7XNN: Add NN to VX (Carry flag not changed)
         case 0x7000:{
-            V[(opcode & 0x0F00)] += (opcode & 0x00FF);
+            V[(opcode & 0x0F00) >> 8] += (opcode & 0x00FF);
             pc += 2;
             break;
         }
@@ -220,25 +220,25 @@ void Chip8::emulateCycle(){
             switch (opcode & 0x000F){
                 // 8XY0: Set VX to value of VY
                 case 0x0000:{
-                    V[(opcode & 0x0F00)] = V[(opcode & 0x00F0)];
+                    V[(opcode & 0x0F00) >> 8] = V[(opcode & 0x00F0) >> 4];
                     pc += 2;
                     break;
                 }
                 // 8XY1: Set VX to VX | VY
                 case 0x0001:{
-                    V[(opcode & 0x0F00)] |= V[(opcode & 0x00F0)];
+                    V[(opcode & 0x0F00) >> 8] |= V[(opcode & 0x00F0) >> 4];
                     pc += 2;
                     break;
                 }
                 // 8XY2: Set VX to VX & VY
                 case 0x0002:{
-                    V[(opcode & 0x0F00)] &= V[(opcode & 0x00F0)];
+                    V[(opcode & 0x0F00) >> 8] &= V[(opcode & 0x00F0) >> 4];
                     pc += 2;
                     break;
                 }
                 // 8XY3: Set VX to VX ^ VY
                 case 0x0003:{
-                    V[(opcode & 0x0F00)] ^= V[(opcode & 0x00F0)];
+                    V[(opcode & 0x0F00) >> 8] ^= V[(opcode & 0x00F0) >> 4];
                     pc += 2;
                     break;
                 }
