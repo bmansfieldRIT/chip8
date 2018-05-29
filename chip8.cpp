@@ -155,6 +155,7 @@ void Chip8::emulateCycle(){
                 // 0x00E0: clear screen
                 case 0x0000:
                     clearDisplay();
+                    pc += 2;
                     break;
                 // 0x00EE: return from subroutine
                 case 0x000E:
@@ -268,6 +269,8 @@ void Chip8::emulateCycle(){
                 case 0x0006:{
                     V[15] = (V[(opcode & 0x00F0) >> 4] & 0x0001);
                     V[(opcode & 0x0F00) >> 8] = V[(opcode 0x00F0) >> 4] >> 1;
+                    pc += 2;
+                    break;
                 }
                 // 8XY7: Vx = VY - VX. VF is set 0 to indicate a borrow.
                 case 0x0007:{
@@ -284,9 +287,12 @@ void Chip8::emulateCycle(){
                     V[0xFF] = V[(opcode & 0x00F0) >> 4] & 0x1000;
                     V[(opcode & 0x00F0) >> 4] <<= 1;
                     V[(opcode & 0x0F00) >> 8] = V[(opcode & 0x00F0) >> 4];
+                    pc += 2;
+                    break;
                 }
             }
         }
+
         // ANNN: sets I to address NNN
         case 0xA000:{
             I = opcode & 0x0FFF;
