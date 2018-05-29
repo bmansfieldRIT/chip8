@@ -292,7 +292,15 @@ void Chip8::emulateCycle(){
                 }
             }
         }
-
+        // 9XY0: skip next instr if VX != VY
+        // Usually next instruction is a jump to skip a code block
+        case 0x9000:{
+            if (V[(opcode & 0x0F00) >> 8] != V[(opcode & 0x00F0) >> 4])
+                pc += 4;
+            else
+                pc += 2;
+            break;
+        }
         // ANNN: sets I to address NNN
         case 0xA000:{
             I = opcode & 0x0FFF;
