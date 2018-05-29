@@ -318,7 +318,7 @@ void Chip8::emulateCycle(){
             std::random_device rd;
             std::mt19937 mt(rd());
             std::uniform_real_distibution<double> dist (0.0, 255.0)
-            V[(opcode 0x0F00) >> 8] = dist(mt) & V[(opcode & 0x00FF)];
+            V[(opcode 0x0F00) >> 8] = dist(mt) & (opcode & 0x00FF);
             pc += 2;
             break;
         }
