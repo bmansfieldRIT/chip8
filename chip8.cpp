@@ -245,14 +245,11 @@ void Chip8::emulateCycle(){
                 // 8XY4: Set VX to VX + VY
                 case 0x0004:{
 
-                    auto x = V[(opcode & 0x0F00)];
-                    auto y = V[(opcode & 0x00F0)];
-                    while (y != 0){
-                        x = x ^ y;
-                        auto carry =  x & y;
-                        y = carry << 1;
-                    }
-                    V[(opcode & 0x0F00)] = x;
+                    if (V[(opcode & 0x00F0) >> 4] > (0xFF - V[(opcode & 0x0F00) >> 8]))
+                        V[0xF] = 1; // carry
+                    else
+                        V[0xF] = 0;
+                    V[(opcode & 0x0F00) >> 8] += V[(opcode & 0x00F0) >> 4];
                     pc += 2;
                     break;
                 }
