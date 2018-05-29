@@ -257,7 +257,7 @@ void Chip8::emulateCycle(){
                     break;
                 }
                 // 8XY5: Set VX to VX - VY
-                case 0x0004:{
+                case 0x0005:{
 
                     auto x = V[(opcode & 0x0F00)];
                     auto y = V[(opcode & 0x00F0)];
@@ -270,6 +270,7 @@ void Chip8::emulateCycle(){
                     pc += 2;
                     break;
                 }
+                
             }
         }
         // ANNN: sets I to address NNN
