@@ -242,7 +242,7 @@ void Chip8::emulateCycle(){
                     pc += 2;
                     break;
                 }
-                // 8XY4: Set VX to VX + VY. VF is set to indicate a carry.
+                // 8XY4: Set VX to VX + VY. VF is set 1 to indicate a carry.
                 case 0x0004:{
 
                     if (V[(opcode & 0x00F0) >> 4] > (0xFF - V[(opcode & 0x0F00) >> 8]))
@@ -253,13 +253,13 @@ void Chip8::emulateCycle(){
                     pc += 2;
                     break;
                 }
-                // 8XY5: Set VX to VX - VY. VF is set to indicate a borrow.
+                // 8XY5: Set VX to VX - VY. VF is set 0 to indicate a borrow.
                 case 0x0005:{
 
                     if (V[(opcode & 0x00F0) >> 4] > V[(opcode & 0x0F00) >> 8])
-                        V[0xF] = 1; // borrow
+                        V[0xF] = 0; // borrow
                     else
-                        V[0xF] = 0;
+                        V[0xF] = 1;
                     V[(opcode & 0x0F00) >> 8] -= V[(opcode & 0x00F0) >> 4];
                     pc += 2;
                     break;
