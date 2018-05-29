@@ -307,7 +307,10 @@ void Chip8::emulateCycle(){
             pc += 2;
             break;
         }
+        // BNNN: PC = V0 + NNN. jumps to address NNN + V0.
         case 0xB000:{
+            pc = V[0x0] + (opcode & 0x0FFF);
+            pc += 2;
             break;
         }
         // DXYN: draw a pixel at coords VX, VY, that is N px high
