@@ -411,6 +411,12 @@ void Chip8::emulateCycle(){
                     pc += 2;
                     break;
                 }
+                // FX1E: add VX to I
+                case 0x001E:{
+                    I += V[(opcode & 0x0F00) >> 8];
+                    pc += 2;
+                    break;
+                }
             }
         }
         default:
