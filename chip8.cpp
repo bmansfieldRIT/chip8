@@ -440,6 +440,13 @@ void Chip8::emulateCycle(){
                     pc+= 2;
                     break;
                 }
+                // FX65: loads [V0 - VX] from memory starting at addr I
+                case 0x0065:{
+                    for (auto i = 0x0; i <= ((opcode & 0x0F00) >> 8); ++i, ++I)
+                        V[i] = memory[I];
+                    pc+= 2;
+                    break;
+                }
             }
         }
         default:
