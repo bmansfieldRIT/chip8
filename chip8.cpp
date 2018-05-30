@@ -329,10 +329,19 @@ void Chip8::emulateCycle(){
         }
         case 0xE000:{
             switch (opcode & 0x00FF){
-                // EX9E: skip next instr if key store din VX is pressed
+                // EX9E: skip next instr if key stored in VX is pressed
                 // usually next instruction is jump to skip a code block
                 case 0x009E:{
                     if (getPressedKey() == V[(opcode & 0x0F00) >> 8])
+                        pc += 4;
+                    else
+                        pc += 2;
+                    break;
+                }
+                // EXA1: skip next instr if key stored in VX is NOT pressed
+                // usually next instruction is jump to skip a code block
+                case 0x00A1:{
+                    if (getPressedKey() != V[(opcode & 0x0F00) >> 8])
                         pc += 4;
                     else
                         pc += 2;
