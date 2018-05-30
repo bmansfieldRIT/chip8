@@ -51,6 +51,7 @@ unsigned short sp;
 
 // HEX based keypad 0x0 - 0xF
 unsigned char key[16];
+unsigned char last_key;
 
 // chip8 font set. Each num or char is 4 px wide and 5 px high
 unsigned char chip8_fontset[80] = {
@@ -92,6 +93,12 @@ void clearMemory(){
         m = 0;
 }
 
+void resetKeyStates(){
+    for (auto& k : key)
+        k = 0;
+    last_key = 0;
+}
+
  void loadFontset(){
      for (int i = 0; i < 80; ++i)
          memory[i] = chip8_fontset[i];
@@ -117,14 +124,19 @@ void Chip8::initialize(){
     clearMemory();
     loadFontset();
     resetTimers();
+    resetKeyStates();
 }
 
 void Chip8::loadGame(std::string name){
     // load game into memory
 }
 
-void Chip8::setKeys(){
-    // initialize keyboard array
+bool Chip8::setKeys(){
+    // detect and set pressed key state
+
+    // if a key has been pressed
+    // TODO set last_key
+    return true;
 }
 
 void setupGraphics(){
@@ -137,13 +149,6 @@ void setupInput(){
 
 void drawGraphics(){
     // use GLUT to draw pixel on the screen, etc.
-}
-
-unsigned char getPressedKey(){
-    // return the currently pressed key
-
-    // if no key pressed
-    return -1;
 }
 
 // given opcode 0xXNNN, sets the program counter to address NNN
@@ -366,7 +371,7 @@ void Chip8::emulateCycle(){
                 // EX9E: skip next instr if key stored in VX is pressed
                 // usually next instruction is jump to skip a code block
                 case 0x009E:{
-                    if (getPressedKey() == V[(opcode & 0x0F00) >> 8])
+                    if (key[V[(opcode & 0x0F00) >> 8]] != 0)
                         pc += 4;
                     else
                         pc += 2;
@@ -375,7 +380,7 @@ void Chip8::emulateCycle(){
                 // EXA1: skip next instr if key stored in VX is NOT pressed
                 // usually next instruction is jump to skip a code block
                 case 0x00A1:{
-                    if (getPressedKey() != V[(opcode & 0x0F00) >> 8])
+                    if (key[V[(opcode & 0x0F00) >> 8]] == 0)
                         pc += 4;
                     else
                         pc += 2;
@@ -394,8 +399,8 @@ void Chip8::emulateCycle(){
                 // FX0A: await key press, then store key in VX
                 // BLOCKING OPERATION! all instr halted until next key event!
                 case 0x000A:{
-                    while (getPressedKey() == -1){}
-                    V[(opcode & 0x0F00) >> 8] = getKeyPressed();
+                    while (!setKeys()){}
+                    V[(opcode & 0x0F00) >> 8] = last_key;
                     pc += 2;
                     break;
                 }
