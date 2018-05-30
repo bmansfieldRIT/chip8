@@ -422,6 +422,7 @@ void Chip8::emulateCycle(){
                 case 0x0029:{
                     I = V[(opcode & 0x0F00) >> 8] * 0x5;
 					pc += 2;
+                    break;
                 }
             }
         }
