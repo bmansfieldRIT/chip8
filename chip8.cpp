@@ -396,6 +396,8 @@ void Chip8::emulateCycle(){
                 case 0x000A:{
                     while (getPressedKey() == -1){}
                     V[(opcode & 0x0F00) >> 8] = getKeyPressed();
+                    pc += 2;
+                    break;
                 }
                 // FX15: det delay timer to VX
                 case 0x0015:{
