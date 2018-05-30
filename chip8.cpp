@@ -399,9 +399,15 @@ void Chip8::emulateCycle(){
                     pc += 2;
                     break;
                 }
-                // FX15: det delay timer to VX
+                // FX15: set delay timer to VX
                 case 0x0015:{
                     delay_timer = V[(opcode & 0x0F00) >> 8];
+                    pc += 2;
+                    break;
+                }
+                // FX18: set sound timer to VX
+                case 0x0018:{
+                    sound_timer = V[(opcode & 0x0F00) >> 8];
                     pc += 2;
                     break;
                 }
