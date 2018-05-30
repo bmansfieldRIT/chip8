@@ -417,6 +417,12 @@ void Chip8::emulateCycle(){
                     pc += 2;
                     break;
                 }
+                // FX29: set I to the location of the sprite for character in VX
+                // Characters 0-F are represented by 4x5 font
+                case 0x0029:{
+                    I = V[(opcode & 0x0F00) >> 8] * 0x5;
+					pc += 2;
+                }
             }
         }
         default:
