@@ -141,6 +141,9 @@ void drawGraphics(){
 
 unsigned char getPressedKey(){
     // return the currently pressed key
+
+    // if no key pressed
+    return -1;
 }
 
 // given opcode 0xXNNN, sets the program counter to address NNN
@@ -387,6 +390,12 @@ void Chip8::emulateCycle(){
                     V[(opcode & 0x0F00) >> 8] = delay_timer;
                     pc += 2;
                     break;
+                }
+                // FX0A: await key press, then store key in VX
+                // BLOCKING OPERATION! all instr halted until next key event!
+                case 0x000A:{
+                    while (getPressedKey() == -1){}
+                    V[(opcode & 0x0F00) >> 8] = getKeyPressed();
                 }
             }
         }
