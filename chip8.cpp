@@ -425,12 +425,19 @@ void Chip8::emulateCycle(){
                     break;
                 }
                 // FX33: store binary-coded decimal representation of VX at
-                // memory address I, I + 1, I + 2
+                // memory address I, I + 1, I + 2 (hundreds, tens, ones digits resp.)
                 case 0x0033:{
                     memory[I] = V[(opcode & 0x0F00) >> 8] / 100;
                     memory[I + 1] = (V[(opcode & 0x0F00) >> 8] / 10) % 10;
                     memory[I + 2] = (V[(opcode & 0x0F00) >> 8] % 100) % 10;
                     pc += 2;
+                    break;
+                }
+                // FX55: stores [V0 - VX] in memory starting at addr I
+                case 0x0055:{
+                    for (auto i = 0x0; i <= ((opcode & 0x0F00) >> 8); ++i, ++I)
+                        memory[I] = V[i];
+                    pc+= 2;
                     break;
                 }
             }
