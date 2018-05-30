@@ -397,6 +397,12 @@ void Chip8::emulateCycle(){
                     while (getPressedKey() == -1){}
                     V[(opcode & 0x0F00) >> 8] = getKeyPressed();
                 }
+                // FX15: det delay timer to VX
+                case 0x0015:{
+                    delay_timer = V[(opcode & 0x0F00) >> 8];
+                    pc += 2;
+                    break;
+                }
             }
         }
         default:
