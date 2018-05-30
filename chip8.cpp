@@ -380,6 +380,16 @@ void Chip8::emulateCycle(){
                 }
             }
         }
+        case 0xF000:{
+            switch (opcode & 0x00FF){
+                // FX07: set VX to the value of the delay timer
+                case 0x0007:{
+                    V[(opcode & 0x0F00) >> 8] = delay_timer;
+                    pc += 2;
+                    break;
+                }
+            }
+        }
         default:
             printf("Unknown opcode: 0x%X\n", opcode);
     }
