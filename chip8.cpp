@@ -139,6 +139,10 @@ void drawGraphics(){
     // use GLUT to draw pixel on the screen, etc.
 }
 
+unsigned char getPressedKey(){
+    // return the currently pressed key
+}
+
 // given opcode 0xXNNN, sets the program counter to address NNN
 void setPCToAddr(unsigned short opcode){
     pc = opcode & 0x0FFF;
@@ -322,6 +326,19 @@ void Chip8::emulateCycle(){
             V[(opcode 0x0F00) >> 8] = dist(mt) & (opcode & 0x00FF);
             pc += 2;
             break;
+        }
+        case 0xE000:{
+            switch (opcode & 0x00FF){
+                // EX9E: skip next instr if key store din VX is pressed
+                // usually next instruction is jump to skip a code block
+                case 0x009E:{
+                    if (getPressedKey() == V[(opcode & 0x0F00) >> 8])
+                        pc += 4;
+                    else
+                        pc += 2;
+                    break;
+                }
+            }
         }
         // DXYN: draw a pixel at coords VX, VY, that is N px high
         case 0xD000:{
