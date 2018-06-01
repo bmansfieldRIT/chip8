@@ -5,10 +5,9 @@ chip8 game system emulator
 Chip8 is essentially a virtual machine, designed in the 70s, and game designers could write games in Chip8 and executed on any computer with a Chip8 emulator/interpreter.
 
 #### Current State of Emulator
-* game loop implemented
+* emulator loop implemented
 * all opcodes implemented
-* graphics need to be implemented
-* sound needs to be implemented
+* Chip8 header file and driver code (GLUT init, keyboard init, etc.) implemented in file from Laurence Mueller's tutorial
 * test suite needs to be written for opcodes, initializations
 
 #### Resources
