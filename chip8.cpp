@@ -7,7 +7,6 @@
 #include <stdio.h>
 #include <string>
 #include <random>
-#include "Chip8.h"
 
 const int SCREEN_WIDTH  = 64;
 const int SCREEN_HEIGHT = 32;
@@ -49,41 +48,6 @@ chip8::~chip8()
 	// empty
 }
 
-void clearDisplay(){
-    for (auto& p : gfx)
-        p = 0;
-}
-
-void clearStack(){
-    for (auto& l : stack)
-        l = 0;
-}
-
-void clearRegisters(){
-    for (auto& r : V)
-        r = 0;
-}
-
-void clearMemory(){
-    for (auto& m : memory)
-        m = 0;
-}
-
-void resetKeyStates(){
-    for (auto& k : key)
-        k = 0;
-}
-
- void loadFontset(){
-     for (int i = 0; i < 80; ++i)
-         memory[i] = chip8_fontset[i];
- }
-
- void resetTimers(){
-     delay_timer = 0;
-     sound_timer = 0;
- }
-
 void Chip8::initialize(){
     // program counter starts at 0x200
     pc = 0x200;
@@ -94,12 +58,21 @@ void Chip8::initialize(){
     // reset stack pointer
     sp = 0;
 
-    clearDisplay();
-    clearRegisters();
-    clearMemory();
-    loadFontset();
-    resetTimers();
-    resetKeyStates();
+    delay_timer = 0;
+    sound_timer = 0;
+
+    for (int i = 0; i < 80; ++i)
+        memory[i] = chip8_fontset[i];
+    for (auto& k : key)
+        k = 0;
+    for (auto& m : memory)
+        m = 0;
+    for (auto& r : V)
+        r = 0;
+    for (auto& l : stack)
+        l = 0;
+    for (auto& p : gfx)
+        p = 0;
 
     drawFlag = true;
 }
@@ -120,7 +93,8 @@ void Chip8::emulateCycle(){
             switch(opcode & 0x000F){
                 // 0x00E0: clear screen
                 case 0x0000:
-                    clearDisplay();
+                    for (auto& p : gfx)
+                        p = 0;
                     drawFlag = true;
                     pc += 2;
                     break;
