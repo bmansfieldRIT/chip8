@@ -7,7 +7,6 @@
 #include <stdio.h>
 #include <string>
 #include <random>
-#include <GLUT/GLUT.h>
 #include "Chip8.h"
 
 const int SCREEN_WIDTH  = 64;
