@@ -19,8 +19,6 @@ const int SCREEN_HEIGHT = 32;
 * 0x200-0XFFF - Program ROM and work RAM
 */
 
-unsigned char last_key;
-
 // chip8 font set. Each num or char is 4 px wide and 5 px high
 unsigned char chip8_fontset[80] = {
   0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
@@ -74,7 +72,6 @@ void clearMemory(){
 void resetKeyStates(){
     for (auto& k : key)
         k = 0;
-    last_key = 0;
 }
 
  void loadFontset(){
