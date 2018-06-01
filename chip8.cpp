@@ -93,6 +93,8 @@ void Chip8::initialize(){
     loadFontset();
     resetTimers();
     resetKeyStates();
+
+    drawFlag = true;
 }
 
 void Chip8::loadGame(std::string name){
@@ -136,6 +138,7 @@ void Chip8::emulateCycle(){
                 // 0x00E0: clear screen
                 case 0x0000:
                     clearDisplay();
+                    drawFlag = true;
                     pc += 2;
                     break;
                 // 0x00EE: return from subroutine
