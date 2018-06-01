@@ -107,10 +107,6 @@ void Chip8::initialize(){
     drawFlag = true;
 }
 
-void Chip8::loadGame(std::string name){
-    // load game into memory
-}
-
 bool Chip8::setKeys(){
     // detect and set pressed key state
 
@@ -447,4 +443,54 @@ void Chip8::emulateCycle(){
             printf("BEEP!");
         --sound_timer;
     }
+}
+
+bool chip8::loadApplication(const char * filename) {
+	initialize();
+	printf("Loading: %s\n", filename);
+
+	// Open file
+	FILE * pFile = fopen(filename, "rb");
+	if (pFile == NULL)
+	{
+		fputs ("File error", stderr);
+		return false;
+	}
+
+	// Check file size
+	fseek(pFile , 0 , SEEK_END);
+	long lSize = ftell(pFile);
+	rewind(pFile);
+	printf("Filesize: %d\n", (int)lSize);
+
+	// Allocate memory to contain the whole file
+	char * buffer = (char*)malloc(sizeof(char) * lSize);
+	if (buffer == NULL)
+	{
+		fputs ("Memory error", stderr);
+		return false;
+	}
+
+	// Copy the file into the buffer
+	size_t result = fread (buffer, 1, lSize, pFile);
+	if (result != lSize)
+	{
+		fputs("Reading error",stderr);
+		return false;
+	}
+
+	// Copy buffer to Chip8 memory
+	if((4096-512) > lSize)
+	{
+		for(int i = 0; i < lSize; ++i)
+			memory[i + 512] = buffer[i];
+	}
+	else
+		printf("Error: ROM too big for memory");
+
+	// Close file, free buffer
+	fclose(pFile);
+	free(buffer);
+
+	return true;
 }
