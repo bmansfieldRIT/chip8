@@ -130,7 +130,8 @@ void Chip8::emulateCycle(){
                 // 0x00EE: return from subroutine
                 case 0x000E:
                     --sp;
-                    pc = stack[pc];
+                    pc = stack[sp];
+                    pc += 2;
                     break;
                 default:
                     printf("Unknown opcode [0x0000]: 0x%X\n", opcode);
