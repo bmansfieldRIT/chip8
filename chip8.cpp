@@ -280,7 +280,6 @@ void Chip8::emulateCycle(){
         // BNNN: PC = V0 + NNN. jumps to address NNN + V0.
         case 0xB000:{
             pc = V[0x0] + (opcode & 0x0FFF);
-            pc += 2;
             break;
         }
         // CXNN: VX = rand(0, 255) & NN.
