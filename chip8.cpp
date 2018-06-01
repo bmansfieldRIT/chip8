@@ -107,26 +107,6 @@ void Chip8::initialize(){
     drawFlag = true;
 }
 
-bool Chip8::setKeys(){
-    // detect and set pressed key state
-
-    // if a key has been pressed
-    // TODO set last_key
-    return true;
-}
-
-void setupGraphics(){
-    // initialize GLUT, etc.
-}
-
-void setupInput(){
-    // initialize keyboard mappings, input, etc.
-}
-
-void drawGraphics(){
-    // use GLUT to draw pixel on the screen, etc.
-}
-
 // given opcode 0xXNNN, sets the program counter to address NNN
 void setPCToAddr(unsigned short opcode){
     pc = opcode & 0x0FFF;
