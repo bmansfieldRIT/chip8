@@ -1,6 +1,9 @@
 # chip8
 chip8 game system emulator
 
+#### To Run
+When linking, include options `-framework OpenGL -framework GLUT`
+
 #### What Is Chip8?
 Chip8 is essentially a virtual machine, designed in the 70s, and game designers could write games in Chip8 and executed on any computer with a Chip8 emulator/interpreter.
 
