@@ -13,7 +13,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <stdio.h>
-#include <glut.h>
+#include <GLUT/glut.h>
 #include "chip8.h"
 
 // Display size

@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <string>
 #include <random>
+#include "chip8.h"
 
 const int SCREEN_WIDTH  = 64;
 const int SCREEN_HEIGHT = 32;
@@ -48,7 +49,7 @@ chip8::~chip8()
 	// empty
 }
 
-void Chip8::initialize(){
+void chip8::initialize(){
     // program counter starts at 0x200
     pc = 0x200;
     // reset current opcode
@@ -82,7 +83,7 @@ void setPCToAddr(unsigned short opcode){
     pc = opcode & 0x0FFF;
 }
 
-void Chip8::emulateCycle(){
+void chip8::emulateCycle(){
     // fetch opcode
     auto opcode = memory[pc] << 8 | memory[pc + 1];
 
