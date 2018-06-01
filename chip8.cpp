@@ -41,6 +41,16 @@ unsigned char chip8_fontset[80] = {
   0xF0, 0x80, 0xF0, 0x80, 0x80  // F
 };
 
+chip8::chip8()
+{
+	// empty
+}
+
+chip8::~chip8()
+{
+	// empty
+}
+
 void clearDisplay(){
     for (auto& p : gfx)
         p = 0;
