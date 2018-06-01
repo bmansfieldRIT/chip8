@@ -12,6 +12,8 @@
 const int SCREEN_WIDTH  = 64;
 const int SCREEN_HEIGHT = 32;
 
+int i = 0;
+
 /*
 * systems memory map:
 * 0x000-0x1FF - Chip8 interpreter, contains font set in emu
@@ -79,6 +81,7 @@ void chip8::initialize(){
 }
 
 void chip8::emulateCycle(){
+
     // fetch opcode
     auto opcode = memory[pc] << 8 | memory[pc + 1];
 
@@ -255,8 +258,9 @@ void chip8::emulateCycle(){
         case 0xC000:{
             std::random_device rd;
             std::mt19937 mt(rd());
-            std::uniform_real_distibution<double> dist (0.0, 255.0)
-            V[(opcode 0x0F00) >> 8] = dist(mt) & (opcode & 0x00FF);
+            std::uniform_real_distribution<double> dist (0.0, 255.0);
+            V[(opcode & 0x0F00) >> 8] = dist(mt);
+            V[(opcode & 0x0F00) >> 8] &= (opcode & 0x00FF);
             pc += 2;
             break;
         }
@@ -382,16 +386,22 @@ void chip8::emulateCycle(){
                 }
                 // FX55: stores [V0 - VX] in memory starting at addr I
                 case 0x0055:{
-                    for (auto i = 0x0; i <= ((opcode & 0x0F00) >> 8); ++i, ++I)
-                        memory[I] = V[i];
-                    pc+= 2;
+                    for (auto i = 0; i <= ((opcode & 0x0F00) >> 8); ++i)
+						memory[I + i] = V[i];
+
+					// On the original interpreter, when the operation is done, I = I + X + 1.
+					I += ((opcode & 0x0F00) >> 8) + 1;
+					pc += 2;
                     break;
                 }
                 // FX65: loads [V0 - VX] from memory starting at addr I
                 case 0x0065:{
-                    for (auto i = 0x0; i <= ((opcode & 0x0F00) >> 8); ++i, ++I)
-                        V[i] = memory[I];
-                    pc+= 2;
+                    for (auto i = 0; i <= ((opcode & 0x0F00) >> 8); ++i)
+						V[i] = memory[I + i];
+
+					// On the original interpreter, when the operation is done, I = I + X + 1.
+					I += ((opcode & 0x0F00) >> 8) + 1;
+					pc += 2;
                     break;
                 }
             }
