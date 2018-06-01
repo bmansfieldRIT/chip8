@@ -169,7 +169,7 @@ void Chip8::emulateCycle(){
         }
         // 5XY0: skips next instruction if VX == VY
         case 0x5000:{
-            if (V[(opcode & 0x0F00) >> 8] != V[(opcode & 0x00F0) >> 4])
+            if (V[(opcode & 0x0F00) >> 8] == V[(opcode & 0x00F0) >> 4])
                 pc += 4;
                 break;
             pc += 2;
