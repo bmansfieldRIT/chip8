@@ -356,9 +356,22 @@ void Chip8::emulateCycle(){
                 // FX0A: await key press, then store key in VX
                 // BLOCKING OPERATION! all instr halted until next key event!
                 case 0x000A:{
-                    while (!setKeys()){}
-                    V[(opcode & 0x0F00) >> 8] = last_key;
-                    pc += 2;
+                    bool keyPress = false;
+
+					for(int i = 0; i < 16; ++i)
+					{
+						if(key[i] != 0)
+						{
+							V[(opcode & 0x0F00) >> 8] = i;
+							keyPress = true;
+						}
+					}
+
+					// If we didn't received a keypress, skip this cycle and try again.
+					if(!keyPress)
+						return;
+
+					pc += 2;
                     break;
                 }
                 // FX15: set delay timer to VX
