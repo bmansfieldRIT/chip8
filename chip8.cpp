@@ -258,7 +258,6 @@ void Chip8::emulateCycle(){
                     V[0xF] = V[(opcode & 0x0F00) >> 8] >> 7;
 					V[(opcode & 0x0F00) >> 8] <<= 1;
 					pc += 2;
-                    pc += 2;
                     break;
                 }
             }
