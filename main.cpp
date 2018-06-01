@@ -1,12 +1,12 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Project description
-// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 // Name: myChip8
 //
 // Author: Laurence Muller
 // Contact: laurence.muller@gmail.com
 //
-// License: GNU General Public License (GPL) v2 
+// License: GNU General Public License (GPL) v2
 // ( http://www.gnu.org/licenses/old-licenses/gpl-2.0.html )
 //
 // Copyright (C) 2011 Laurence Muller / www.multigesture.net
@@ -35,40 +35,40 @@ void keyboardDown(unsigned char key, int x, int y);
 // Use new drawing method
 #define DRAWWITHTEXTURE
 typedef unsigned __int8 u8;
-u8 screenData[SCREEN_HEIGHT][SCREEN_WIDTH][3]; 
+u8 screenData[SCREEN_HEIGHT][SCREEN_WIDTH][3];
 void setupTexture();
 
-int main(int argc, char **argv) 
-{		
+int main(int argc, char **argv)
+{
 	if(argc < 2)
 	{
-		printf("Usage: myChip8.exe chip8application\n\n");
+		printf("Usage: ./myChip8 <game>\n\n");
 		return 1;
 	}
 
 	// Load game
-	if(!myChip8.loadApplication(argv[1]))		
+	if(!myChip8.loadApplication(argv[1]))
 		return 1;
-		
+
 	// Setup OpenGL
-	glutInit(&argc, argv);          
+	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
 
 	glutInitWindowSize(display_width, display_height);
     glutInitWindowPosition(320, 320);
 	glutCreateWindow("myChip8 by Laurence Muller");
-	
+
 	glutDisplayFunc(display);
 	glutIdleFunc(display);
-    glutReshapeFunc(reshape_window);        
+    glutReshapeFunc(reshape_window);
 	glutKeyboardFunc(keyboardDown);
-	glutKeyboardUpFunc(keyboardUp); 
+	glutKeyboardUpFunc(keyboardUp);
 
 #ifdef DRAWWITHTEXTURE
-	setupTexture();			
-#endif	
+	setupTexture();
+#endif
 
-	glutMainLoop(); 
+	glutMainLoop();
 
 	return 0;
 }
@@ -77,33 +77,33 @@ int main(int argc, char **argv)
 void setupTexture()
 {
 	// Clear screen
-	for(int y = 0; y < SCREEN_HEIGHT; ++y)		
+	for(int y = 0; y < SCREEN_HEIGHT; ++y)
 		for(int x = 0; x < SCREEN_WIDTH; ++x)
 			screenData[y][x][0] = screenData[y][x][1] = screenData[y][x][2] = 0;
 
-	// Create a texture 
+	// Create a texture
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, SCREEN_WIDTH, SCREEN_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, (GLvoid*)screenData);
 
 	// Set up the texture
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP); 
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
 	// Enable textures
 	glEnable(GL_TEXTURE_2D);
 }
 
 void updateTexture(const chip8& c8)
-{	
+{
 	// Update pixels
-	for(int y = 0; y < 32; ++y)		
+	for(int y = 0; y < 32; ++y)
 		for(int x = 0; x < 64; ++x)
 			if(c8.gfx[(y * 64) + x] == 0)
 				screenData[y][x][0] = screenData[y][x][1] = screenData[y][x][2] = 0;	// Disabled
-			else 
+			else
 				screenData[y][x][0] = screenData[y][x][1] = screenData[y][x][2] = 255;  // Enabled
-		
+
 	// Update Texture
 	glTexSubImage2D(GL_TEXTURE_2D, 0 ,0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGB, GL_UNSIGNED_BYTE, (GLvoid*)screenData);
 
@@ -129,12 +129,12 @@ void drawPixel(int x, int y)
 void updateQuads(const chip8& c8)
 {
 	// Draw
-	for(int y = 0; y < 32; ++y)		
+	for(int y = 0; y < 32; ++y)
 		for(int x = 0; x < 64; ++x)
 		{
-			if(c8.gfx[(y*64) + x] == 0) 
-				glColor3f(0.0f,0.0f,0.0f);			
-			else 
+			if(c8.gfx[(y*64) + x] == 0)
+				glColor3f(0.0f,0.0f,0.0f);
+			else
 				glColor3f(1.0f,1.0f,1.0f);
 
 			drawPixel(x, y);
@@ -144,20 +144,20 @@ void updateQuads(const chip8& c8)
 void display()
 {
 	myChip8.emulateCycle();
-		
+
 	if(myChip8.drawFlag)
 	{
 		// Clear framebuffer
 		glClear(GL_COLOR_BUFFER_BIT);
-        
+
 #ifdef DRAWWITHTEXTURE
 		updateTexture(myChip8);
 #else
-		updateQuads(myChip8);		
-#endif			
+		updateQuads(myChip8);
+#endif
 
 		// Swap buffers!
-		glutSwapBuffers();    
+		glutSwapBuffers();
 
 		// Processed frame
 		myChip8.drawFlag = false;
@@ -169,7 +169,7 @@ void reshape_window(GLsizei w, GLsizei h)
 	glClearColor(0.0f, 0.0f, 0.5f, 0.0f);
 	glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluOrtho2D(0, w, h, 0);        
+    gluOrtho2D(0, w, h, 0);
     glMatrixMode(GL_MODELVIEW);
     glViewport(0, 0, w, h);
 
