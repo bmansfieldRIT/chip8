@@ -56,7 +56,7 @@ int main(int argc, char **argv)
 
 	glutInitWindowSize(display_width, display_height);
     glutInitWindowPosition(320, 320);
-	glutCreateWindow("myChip8 by Laurence Muller");
+	glutCreateWindow("myChip8 by Laurence Muller & Brian Mansfield");
 
 	glutDisplayFunc(display);
 	glutIdleFunc(display);
