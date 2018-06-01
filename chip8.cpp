@@ -388,6 +388,10 @@ void Chip8::emulateCycle(){
                 }
                 // FX1E: add VX to I
                 case 0x001E:{
+                    if(I + V[(opcode & 0x0F00) >> 8] > 0xFFF)	// VF is set to 1 when range overflow (I+VX>0xFFF), and 0 when there isn't.
+						V[0xF] = 1;
+					else
+						V[0xF] = 0;
                     I += V[(opcode & 0x0F00) >> 8];
                     pc += 2;
                     break;
