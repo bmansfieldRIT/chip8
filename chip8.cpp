@@ -112,14 +112,16 @@ void chip8::emulateCycle(){
         }
         // 1NNN: Jump to address NNN
         case 0x1000:{
-            setPCtoAddr(opcode);
+            pc = opcode & 0x0FFF;
+            break;
         }
         // 2NNN: call the subroutine at address NNN
         case 0x2000:{
             // place the program counter on the stack
             stack[sp] = pc;
             ++sp;
-            setPCtoAddr(opcode);
+            pc = opcode & 0x0FFF;
+            break;
         }
         // 3XNN: skip next instruction if VX == NN
         // usually next instr is jump to skip a code block
