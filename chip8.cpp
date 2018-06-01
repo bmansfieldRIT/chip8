@@ -445,6 +445,22 @@ void Chip8::emulateCycle(){
     }
 }
 
+void chip8::debugRender() {
+	// Draw
+	for(int y = 0; y < 32; ++y)
+	{
+		for(int x = 0; x < 64; ++x)
+		{
+			if(gfx[(y*64) + x] == 0)
+				printf("O");
+			else
+				printf(" ");
+		}
+		printf("\n");
+	}
+	printf("\n");
+}
+
 bool chip8::loadApplication(const char * filename) {
 	initialize();
 	printf("Loading: %s\n", filename);
