@@ -78,11 +78,6 @@ void chip8::initialize(){
     drawFlag = true;
 }
 
-// given opcode 0xXNNN, sets the program counter to address NNN
-void setPCToAddr(unsigned short opcode){
-    pc = opcode & 0x0FFF;
-}
-
 void chip8::emulateCycle(){
     // fetch opcode
     auto opcode = memory[pc] << 8 | memory[pc + 1];
